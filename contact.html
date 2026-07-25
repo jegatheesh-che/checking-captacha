@@ -390,7 +390,10 @@
 
           const object = {};
           formData.forEach((value, key) => {
-            object[key] = value;
+            // Exclude captcha response tokens so they do not clutter the email body
+            if (key !== 'h-captcha-response' && key !== 'g-recaptcha-response') {
+              object[key] = value;
+            }
           });
 
           // Fetch recipient URL from form action (defaults to Siva's email)
