@@ -247,6 +247,9 @@
             <!-- Honeypot Anti-Spam Field for FormSubmit -->
             <input type="text" name="_honey" style="display: none;">
 
+            <!-- On-Page hCaptcha Widget -->
+            <div class="h-captcha" data-sitekey="5d8089ca-f540-4680-89ce-6e98d4961c40" style="margin-bottom: 1.5rem;"></div>
+
             <button type="submit" class="contact-submit" id="submitBtn">
               <span id="submitBtnText">SEND MESSAGE</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" id="submitBtnIcon"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -373,12 +376,18 @@
             return;
           }
 
+          const formData = new FormData(contactForm);
+
+          if (!formData.get('h-captcha-response')) {
+            alert("Please check the Captcha box to verify you are human.");
+            return;
+          }
+
           submitBtn.disabled = true;
           submitBtnText.textContent = 'SENDING...';
           submitBtnIcon.style.display = 'none';
           submitBtnSpinner.style.display = 'inline-block';
 
-          const formData = new FormData(contactForm);
           const object = {};
           formData.forEach((value, key) => {
             object[key] = value;
@@ -423,6 +432,9 @@
           el.classList.remove('is-filled');
           el.closest('.form-group').classList.remove('has-error');
         });
+        if (typeof hcaptcha !== 'undefined') {
+          hcaptcha.reset();
+        }
         submitBtn.disabled = false;
         submitBtnText.textContent = 'SEND MESSAGE';
         submitBtnIcon.style.display = 'inline-block';
@@ -445,6 +457,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
     <script src="script.js" defer></script>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
   </body>
 </html>
 
